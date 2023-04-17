@@ -61,4 +61,9 @@ public class RestPersonController {
 	public ResponseEntity<?> getListByUserLogin(@PathVariable("login") String login) throws Throwable {
 		return ResponseEntity.ok(personService.getListByUserLogin(login));	
 	}
+	
+	@GetMapping("/personuser/login/{login}")
+	public ResponseEntity<?> getPersonUserListByUserLogin(@PathVariable("login") String login) throws Throwable {
+		return ResponseEntity.ok(personService.getPersonUserListByUserLogin(login));
+	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.edw.demo.domain.entity.Person;
+import com.edw.demo.domain.entity.PersonUser;
 import com.edw.demo.infra.outputport.IPersonRepositoryOutputPort;
 
 @Repository("PersonDBSimulator")
@@ -82,6 +83,16 @@ public class PersonDBSimulator implements IPersonRepositoryOutputPort{
 		
 		return personList;
 		
+	}
+
+	@Override
+	public List<PersonUser> getPersonUserListByUserLogin(String login) {
+		List<PersonUser> personUserList = new ArrayList<>();
+		
+		PersonUser personUser1 = new PersonUser("Moreno", "edwaromo");
+		personUserList.add(personUser1);
+		
+		return personUserList;
 	}
 	
 	

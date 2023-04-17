@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.edw.demo.domain.entity.Person;
+import com.edw.demo.domain.entity.PersonUser;
 import com.edw.demo.infra.inputport.IPersonServiceInputPort;
 //import com.edw.demo.infra.outputport.IPersonRepositoryJPAOutputPort;
 import com.edw.demo.infra.outputport.IPersonRepositoryOutputPort;
@@ -57,6 +58,11 @@ public class PersonService implements IPersonServiceInputPort {
 	@Override
 	public List<Person> getListByUserLogin(String login) {
 		return personRepository.getListByUserLogin(login);
+	}
+
+	@Override
+	public List<PersonUser> getPersonUserListByUserLogin(String login) {
+		return personRepository.getPersonUserListByUserLogin(login);
 	}
 	
 }

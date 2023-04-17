@@ -7,14 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.edw.demo.domain.entity.Person;
+import com.edw.demo.domain.entity.PersonUser;
+import com.edw.demo.infra.outputadapter_drivenadapter.db.jpa.dto.PersonUserJpaDto;
 import com.edw.demo.infra.outputadapter_drivenadapter.db.jpa.entity.PersonJpaEntity;
+import com.edw.demo.infra.outputadapter_drivenadapter.db.jpa.extendsinterfaces.IPersonJPA;
 import com.edw.demo.infra.outputadapter_drivenadapter.db.jpa.util.convert.ConvertDomainEntityToJpaEntity;
+import com.edw.demo.infra.outputadapter_drivenadapter.db.jpa.util.convert.ConvertJpaDtoToDomainEntity;
 import com.edw.demo.infra.outputadapter_drivenadapter.db.jpa.util.convert.ConvertJpaEntityToDomainEntity;
+import com.edw.demo.infra.outputadapter_drivenadapter.db.jpa.util.convert.ConvertJpaTupleToDomainEntity;
 import com.edw.demo.infra.outputport.IPersonRepositoryOutputPort;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import jakarta.persistence.Tuple;
 
 @Repository("PersonDBJPA")
 public class PersonDBJPA implements IPersonRepositoryOutputPort{
@@ -104,6 +110,29 @@ public class PersonDBJPA implements IPersonRepositoryOutputPort{
 		}
 		
 		return personList;
+	}
+
+	/*
+	 * No pemrite hacer el casteo directo del DTO (PersonUserJpaDto) en el resultado del NativeQuery, por eso se usa 
+	 * como alternativa para esto la clase jakarta.persistence.Tuple para podder recuperar por medio del Tuple los valores 
+	 * del DTO deseado
+	 */
+	@Override
+	public List<PersonUser> getPersonUserListByUserLogin(String login) {
+		List<PersonUser> personUserList = new ArrayList<>();
+		String sqlString = "SELECT p.name personName, u.login userLogin FROM persons p "
+				+ "LEFT JOIN users u ON (u.id = p.user_id) "
+				+ "WHERE u.login = :login";
+		Query nativeQuery = em.createNativeQuery(sqlString, Tuple.class);
+		nativeQuery.setParameter("login", login);
+		//for (PersonUserJpaDto personUserJpaDto : (List<PersonUserJpaDto>)nativeQuery.getResultList()) {
+		//	PersonUser personUser = ConvertJpaDtoToDomainEntity.personUserJpaDtoToPersonUserDomain(personUserJpaDto);
+		for (Tuple tuple : (List<Tuple>)nativeQuery.getResultList()) {
+			PersonUser personUser = ConvertJpaTupleToDomainEntity.personUserJpaTupleToPersonUserDomain(tuple);
+			personUserList.add(personUser);
+		}
+		
+		return personUserList;
 	}
 	
 	

@@ -1,4 +1,4 @@
-package com.edw.demo.infra.outputadapter_drivenadapter.db.jpa;
+package com.edw.demo.infra.outputadapter_drivenadapter.db.jpa.extendsinterfaces;
 
 import java.util.List;
 
